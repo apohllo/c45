@@ -1,2 +1,5 @@
 .*.sw?
 *.gem
+work
+data
+R8
