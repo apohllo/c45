@@ -69,6 +69,11 @@ module C45
       end
     end
 
+    # Prints more info than to_s but less than to_s(true).
+    def inspect
+      "#{self.to_s}[#{self.left}|#{self.right}]"
+    end
+
     # Converts the node to string representation.
     # If +pretty+ is true, full (sub)tree is printed.
     def to_s(pretty=false)
