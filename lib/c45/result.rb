@@ -12,10 +12,15 @@ module C45
     end
 
     def to_s(pretty=false)
-      if pretty
-        " #{@klass} (#{@positive}/#{@negative})"
+      if @positive == 0 && @negative == 0
+        values = "0.0"
       else
-        "Result: #{@klass} #{@positive}/#{@negative}"
+        values = "#{@positive}/#{@negative}"
+      end
+      if pretty
+        " #{@klass} (#{values})"
+      else
+        "Result: #{@klass} #{values}"
       end
     end
 

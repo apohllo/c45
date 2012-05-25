@@ -1,7 +1,5 @@
 module C45
   class Node
-    EPSI = 0.00001
-
     attr_reader :feature, :value
 
     # The parent node of this node.
@@ -26,13 +24,18 @@ module C45
     # from the tree root.
     def level
       result = 0
-      node = self.parent
+      node = self
       while(!node.nil?) do
-        result += 1
+        result += node.parent.level_step(node) if node.parent
         node = node.parent
       end
       result
     end
+
+    def level_step(node)
+      1
+    end
+
 
     # Saves the (sub)tree at the location given as +path+.
     def save(path)
@@ -70,38 +73,27 @@ module C45
     # If +pretty+ is true, full (sub)tree is printed.
     def to_s(pretty=false)
       if pretty
-        if self.left.nil?
-          left_str = "BUG"
-        else
-          left_str = self.left.to_s(true)
-          unless self.left.is_a?(Result)
-            left_str = "\n" + left_str
-          end
-        end
-        if self.right.nil?
-          right_str = "BUG"
-        else
-          right_str = self.right.to_s(true)
-          unless self.right.is_a?(Result)
-            right_str = "\n" + right_str
-          end
-        end
-        "|   " * self.level + "#{@feature} <= #{@value} :" + left_str + "\n" +
-          "|   " * self.level + "#{@feature} > #{@value} :" + right_str
+        pretty_to_s
       else
-        "Node: #{@feature}: #{@value}"
+        "#{self.class.to_s.split("::").last}: #{@feature}: #{@value}"
       end
     end
 
     protected
-    # Returns the node on the path that is compatible
-    # with the +example+.
-    def next_node(example)
-      if example[@feature] <= @value || (example[@feature] - @value).abs < EPSI
-        self.left
-      else
-        self.right
+    # Returns pretty representation of the child at +side+.
+    def child_to_s(side)
+      unless side == :left || side == :right
+        raise ArgumentError.new("Invalid node side #{side}.")
       end
+      if self.__send__(side).nil?
+        result = ""
+      else
+        result = self.__send__(side).to_s(true)
+        unless self.__send__(side).is_a?(Result)
+          result = "\n" + result
+        end
+      end
+      result
     end
   end
 end
