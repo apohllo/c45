@@ -1,0 +1,4 @@
+== DESCRIPTION ==
+
+Tiny library which reflecs the decision tree model with
+discrete and continuous values.
