@@ -20,7 +20,7 @@ module C45
     # Returns the node on the path that is compatible
     # with the +example+.
     def next_node(example)
-      if example[@feature] == @value
+      if example[@feature].to_s == @value
         self.left
       else
         self.right
